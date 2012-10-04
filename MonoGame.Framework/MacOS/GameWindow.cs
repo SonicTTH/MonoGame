@@ -69,6 +69,28 @@ namespace Microsoft.Xna.Framework
 		#region GameWindow Methods
 		public GameWindow(Game game, RectangleF frame) : base (frame)
 		{
+			// Force 24-bit depth size (like XNA) instead of MonoMacGameView's 16-bit depth size
+			object[] attribs = new object[]
+			{
+				NSOpenGLPixelFormatAttribute.Accelerated,
+				NSOpenGLPixelFormatAttribute.NoRecovery,
+				NSOpenGLPixelFormatAttribute.DoubleBuffer,
+				NSOpenGLPixelFormatAttribute.ColorSize, 24,
+				NSOpenGLPixelFormatAttribute.DepthSize, 24
+			};
+
+			var pixelFormat = new NSOpenGLPixelFormat (attribs);
+
+			var pixelFormatFieldInfo = typeof(MonoMacGameView).GetField( "pixelFormat", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic );
+			pixelFormatFieldInfo.SetValue( this, pixelFormat );
+
+			var openGLContext = new NSOpenGLContext( pixelFormat, null );
+
+			var openGLContextFieldInfo = typeof(MonoMacGameView).GetField ( "openGLContext", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic );
+			openGLContextFieldInfo.SetValue( this, openGLContext );
+
+			openGLContext.MakeCurrentContext();
+
             if (game == null)
                 throw new ArgumentNullException("game");
             _game = game;
