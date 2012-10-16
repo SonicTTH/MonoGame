@@ -588,14 +588,28 @@ namespace Microsoft.Xna.Framework.Graphics
 
 			GL.BindTexture(TextureTarget.Texture2D, this.glTexture);
 
-			if (rect.HasValue) {
-				throw new NotImplementedException();
-			}
-
 			if (glFormat == (GLPixelFormat)All.CompressedTextureFormats) {
 				throw new NotImplementedException();
 			} else {
-				GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, data);
+                T[] fullData = data;
+
+                if( rect.HasValue ) {
+                    fullData = new T[ Width * Height ];
+                }
+
+				GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, fullData);
+
+                if (rect.HasValue) {
+                    Rectangle r = rect.Value;
+                    for( int j = 0; j < r.Height; j++ )
+                    {
+                        for( int i = 0; i < r.Width; i++ )
+                        {
+                            data[ r.Width * j + i ] = fullData[ Width * ( r.Y + j ) + ( r.X + i ) ];
+                        }
+                    }
+                }
+
 			}
 
 #endif
