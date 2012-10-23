@@ -405,10 +405,12 @@ namespace Microsoft.Xna.Framework
 			set
             {
                 if (value)
-                    Window.StyleMask |= NSWindowStyle.Resizable;
+					Window.StyleMask |= NSWindowStyle.Resizable;
                 else
                     Window.StyleMask &= ~NSWindowStyle.Resizable;
-            }
+
+				Window.StandardWindowButton(NSWindowButton.ZoomButton).Enabled = value;
+			}
 		}	
 
 		private DisplayOrientation _currentOrientation;
