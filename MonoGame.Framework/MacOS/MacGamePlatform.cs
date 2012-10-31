@@ -493,7 +493,6 @@ namespace Microsoft.Xna.Framework
             {
 				NSApplication.SharedApplication.BeginInvokeOnMainThread( delegate {
 				    _owner.State = MacGamePlatform.RunState.Exited;
-				    _owner.Game.DoExiting();
 				});
             }
 
