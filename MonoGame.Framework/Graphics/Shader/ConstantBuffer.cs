@@ -11,7 +11,7 @@ using MonoMac.OpenGL;
 using OpenTK.Graphics.OpenGL;
 #elif GLES
 using OpenTK.Graphics.ES20;
-#elif PSS
+#elif PSM
 using Sce.PlayStation.Core.Graphics;
 #endif
 
@@ -127,7 +127,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 if (data is float)
                     bytes = BitConverter.GetBytes((float)data);
-                else
+                else if (data is int)
+					// Integer values are treated as floats after the shader is converted, so we convert them.
+					bytes = BitConverter.GetBytes((float)((int)data));
+				else
                     bytes = BitConverter.GetBytes(((float[])data)[0]);
 
                 Buffer.BlockCopy(bytes, 0, _buffer, offset, elementSize);
@@ -136,7 +139,6 @@ namespace Microsoft.Xna.Framework.Graphics
             // Take care of the single copy case!
             else if (rows == 1 || (rows == 4 && columns == 4))
                 Buffer.BlockCopy(data as Array, 0, _buffer, offset, rows * columns * elementSize);
-
             else
             {
                 var source = data as Array;
@@ -168,9 +170,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 switch (param.ParameterType)
                 {
                     case EffectParameterType.Single:
-                        SetData(offset, param.RowCount, param.ColumnCount, param.Data);
+					case EffectParameterType.Int32:
+						SetData(offset, param.RowCount, param.ColumnCount, param.Data);
                         break;
-
                     default:
                         throw new NotImplementedException("Not supported!");
                 }
@@ -232,7 +234,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 d3dContext.PixelShader.SetConstantBuffer(slot, _cbuffer);
         }
 
-#elif OPENGL || PSS
+#elif OPENGL || PSM
 
         public unsafe void Apply(GraphicsDevice device, int program)
         {
@@ -273,7 +275,7 @@ namespace Microsoft.Xna.Framework.Graphics
             _dirty = false;
 #endif
             
-#if PSS
+#if PSM
 #warning Unimplemented
 #endif
         }
