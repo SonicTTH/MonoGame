@@ -51,28 +51,28 @@ namespace Microsoft.Xna.Framework.Audio
 {
     public sealed class SoundEffect : IDisposable
     {
-        private Sound _sound;
-        private string _name = "";
-        private string _filename = "";
-        internal byte[] _data;
-        
-        internal float Rate { get; set; }
+		private Sound _sound;
+		private string _name = "";
+		private string _filename = "";
+		internal byte[] _data;
+		
+		internal float Rate { get; set; }
 
-        internal ALFormat Format { get; set; }
+		internal ALFormat Format { get; set; }
 
-        internal int Size { get; set; }
-        
-        internal SoundEffect(string fileName)
-        {
-            _filename = fileName;       
-            
-            if (_filename == string.Empty )
-            {
-              throw new FileNotFoundException("Supported Sound Effect formats are wav, mp3, acc, aiff");
-            }
-            
-            //_sound = new Sound(_filename, 1.0f, false);
-            _name = Path.GetFileNameWithoutExtension(fileName);
+		internal int Size { get; set; }
+		
+		internal SoundEffect(string fileName)
+		{
+			_filename = fileName;		
+			
+			if (_filename == string.Empty )
+			{
+			  throw new FileNotFoundException("Supported Sound Effect formats are wav, mp3, acc, aiff");
+			}
+			
+			//_sound = new Sound(_filename, 1.0f, false);
+			_name = Path.GetFileNameWithoutExtension(fileName);
             ALFormat format;
             int size;
             int freq;
@@ -90,15 +90,15 @@ namespace Microsoft.Xna.Framework.Audio
 
             _data = LoadAudioStream(s, 1.0f, false);
 
-            s.Close();          
-        }
-        
-        //SoundEffect from playable audio data
-        internal SoundEffect(string name, byte[] data)
-        {
-            _data = data;
-            _name = name;
-            
+            s.Close();			
+		}
+		
+		//SoundEffect from playable audio data
+		internal SoundEffect(string name, byte[] data)
+		{
+			_data = data;
+			_name = name;
+			
             Stream s;
 
             try
@@ -109,16 +109,16 @@ namespace Microsoft.Xna.Framework.Audio
             {
                 throw new Content.ContentLoadException("Could not load audio data", e);
             }
-            
-            //_sound = new Sound(_data, 1.0f, false);
+			
+			//_sound = new Sound(_data, 1.0f, false);
             _data = LoadAudioStream(s, 1.0f, false);
 
-        }
-        
-        public SoundEffect(byte[] buffer, int sampleRate, AudioChannels channels)
-        {
-            //buffer should contain 16-bit PCM wave data
-            short bitsPerSample = 16;
+		}
+		
+		public SoundEffect(byte[] buffer, int sampleRate, AudioChannels channels)
+		{
+			//buffer should contain 16-bit PCM wave data
+			short bitsPerSample = 16;
 
             using (MemoryStream mStream = new MemoryStream(44 + buffer.Length))
             {
@@ -154,8 +154,8 @@ namespace Microsoft.Xna.Framework.Audio
                     mStream.Close();
                 }
             }
-            //_sound = new Sound(_data, 1.0f, false);
-        }
+			//_sound = new Sound(_data, 1.0f, false);
+		}
 
         internal SoundEffect(Stream s)
         {
