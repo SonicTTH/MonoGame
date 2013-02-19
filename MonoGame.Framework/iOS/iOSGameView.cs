@@ -85,6 +85,8 @@ using Microsoft.Xna.Framework.Input.Touch;
 using All = OpenTK.Graphics.ES20.All;
 
 namespace Microsoft.Xna.Framework {
+
+    [Register("iOSGameView")]
 	partial class iOSGameView : UIView {
 		private readonly iOSGamePlatform _platform;
 		private int _colorbuffer;
@@ -191,6 +193,12 @@ namespace Microsoft.Xna.Framework {
 			_glapi = null;
 		}
 
+        [Export("doTick")]
+        void DoTick()
+        {
+            _platform.Tick();
+        }
+
 		private void CreateFramebuffer ()
 		{
 			AssertNotDisposed ();
@@ -251,8 +259,8 @@ namespace Microsoft.Xna.Framework {
 
                 if (this.NextResponder is iOSGameViewController)
                 {
-                    DisplayOrientation supportedOrientations = OrientationConverter.Normalize((this.NextResponder as iOSGameViewController).SupportedOrientations);
-                    if ((supportedOrientations & DisplayOrientation.LandscapeRight) != 0 || (supportedOrientations & DisplayOrientation.LandscapeLeft) != 0)
+                    var displayOrientation = _platform.Game.Window.CurrentOrientation;
+                    if (displayOrientation == DisplayOrientation.LandscapeLeft || displayOrientation == DisplayOrientation.LandscapeRight)
                     {
                         height = Math.Min(viewportHeight, viewportWidth);
                         width = Math.Max(viewportHeight, viewportWidth);
