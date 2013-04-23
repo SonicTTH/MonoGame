@@ -703,12 +703,12 @@ namespace Microsoft.Xna.Framework
 			UnloadContent();
 		}
 
-        internal void ResizeWindow(bool changed)
+        internal void ResizeWindow()
         {
 #if LINUX || (WINDOWS && OPENGL)
-            ((OpenTKGamePlatform)Platform).ResetWindowBounds(changed);
+            ((OpenTKGamePlatform)Platform).ResetWindowBounds();
 #elif WINDOWS && DIRECTX
-            ((MonoGame.Framework.WinFormsGamePlatform)Platform).ResetWindowBounds(changed);
+            ((MonoGame.Framework.WinFormsGamePlatform)Platform).ResetWindowBounds();
 #endif
         }
 
