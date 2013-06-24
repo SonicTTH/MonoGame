@@ -537,6 +537,9 @@ namespace Microsoft.Xna.Framework
 
 		public override void FlagsChanged (NSEvent theEvent)
 		{
+			bool wasCommandKeyDown = _flags.Contains (Keys.LeftWindows);
+			bool isCommandKeyDown = false;
+
 
 			_flags.Clear ();
 			var modInt = (uint)theEvent.ModifierFlags & 0xFFFF0000;
@@ -553,6 +556,7 @@ namespace Microsoft.Xna.Framework
 			case NSEventModifierMask.CommandKeyMask:
 				_flags.Add (Keys.LeftWindows);
 				_flags.Add (Keys.RightWindows);
+				isCommandKeyDown = true;
 				break;
 			case NSEventModifierMask.ControlKeyMask:
 				_flags.Add (Keys.LeftControl);
@@ -565,6 +569,13 @@ namespace Microsoft.Xna.Framework
 				_flags.Add (Keys.RightShift);
 				_flags.Add (Keys.LeftShift);
 				break;
+			}
+
+			if (wasCommandKeyDown && ! isCommandKeyDown)
+			{
+				// OS X doesn't send KeyUp events while the Command key is down.
+				// The best we can do is clear all pressed keys when the Command key is released
+				_keys.Clear ();
 			}
 
 			UpdateKeyboardState ();
